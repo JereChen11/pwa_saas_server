@@ -3,6 +3,7 @@ package com.pwa.saas_server.mapper;
 import com.pwa.saas_server.data.bean.InstallStatsBean;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -17,8 +18,9 @@ public interface InstallStatsMapper {
 
     List<InstallStatsBean> selectInstallStatsByUa(String userAgent);
 
-    //TODO 晚点实现
-//    List<InstallStatsBean> selectInstallStatsByCreateTime(String startTime, String endTime);
+    List<InstallStatsBean> selectInstallStatsByStartTime(Timestamp startTime);
+
+    List<InstallStatsBean> selectInstallStatsByTimeRange(Timestamp startTime, Timestamp endTime);
 
     InstallStatsBean selectInstallStatsById(Long instId);
 

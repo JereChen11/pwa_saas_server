@@ -2,6 +2,7 @@ package com.pwa.saas_server.service;
 
 import com.pwa.saas_server.data.bean.InstallStatsBean;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -14,8 +15,9 @@ public interface InstallStatsService {
 
     List<InstallStatsBean> getInstallStatsByUa(String userAgent);
 
-    //TODO 晚点实现
-//    List<InstallStatsBean> getInstallStatsByCreateTime(String startTime, String endTime);
+    List<InstallStatsBean> getInstallStatsByStartTime(Timestamp startTime);
+
+    List<InstallStatsBean> getInstallStatsByTimeRange(Timestamp startTime, Timestamp endTime);
 
     InstallStatsBean getInstallStatsById(Long instId);
 

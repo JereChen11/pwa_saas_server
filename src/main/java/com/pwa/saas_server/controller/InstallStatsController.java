@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -45,8 +46,16 @@ public class InstallStatsController {
         return Result.success(installStatsService.getInstallStatsById(instId));
     }
 
-//    //TODO 晚点实现
-////    List<InstallStatsBean> getInstallStatsByCreateTime(String startTime, String endTime);
+    @GetMapping("/getInstallStatsByStartTime")
+    public Result<List<InstallStatsBean>> getInstallStatsByStartTime(Timestamp startTime) {
+        logger.error("getInstallStatsByStartTime startTime = " + startTime);
+        return Result.success(installStatsService.getInstallStatsByStartTime(startTime));
+    }
+
+    @GetMapping("/getInstallStatsByTimeRange")
+    public Result<List<InstallStatsBean>> getInstallStatsByTimeRange(Timestamp startTime, Timestamp endTime) {
+        return Result.success(installStatsService.getInstallStatsByTimeRange(startTime, endTime));
+    }
 
     @PostMapping("/stats")
     public Result<String> insertInstallStats(HttpServletRequest request, InstallStatsBean installStatsBean) {

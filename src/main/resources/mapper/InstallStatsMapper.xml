@@ -19,6 +19,18 @@
         where user_agent = #{userAgent}
     </select>
 
+    <select id="selectInstallStatsByStartTime" parameterType="java.sql.Timestamp" resultMap="InstallStatsBeanResultMap">
+        select *
+        from tb_install_stats
+        where created_time >= #{startTime}
+    </select>
+
+    <select id="selectInstallStatsByTimeRange" resultMap="InstallStatsBeanResultMap">
+        select *
+        from tb_install_stats
+        where created_time BETWEEN #{startTime} and #{endTime}
+    </select>
+
     <select id="selectInstallStatsById" parameterType="java.lang.Long" resultMap="InstallStatsBeanResultMap">
         select *
         from tb_install_stats

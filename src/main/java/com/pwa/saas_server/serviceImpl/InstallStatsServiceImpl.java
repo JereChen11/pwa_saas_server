@@ -3,9 +3,11 @@ package com.pwa.saas_server.serviceImpl;
 import com.pwa.saas_server.data.bean.InstallStatsBean;
 import com.pwa.saas_server.mapper.InstallStatsMapper;
 import com.pwa.saas_server.service.InstallStatsService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -30,6 +32,17 @@ public class InstallStatsServiceImpl implements InstallStatsService {
     @Override
     public List<InstallStatsBean> getInstallStatsByUa(String userAgent) {
         return installStatsMapper.selectInstallStatsByUa(userAgent);
+    }
+
+    @Override
+    public List<InstallStatsBean> getInstallStatsByStartTime(Timestamp startTime) {
+        return installStatsMapper.selectInstallStatsByStartTime(startTime);
+    }
+
+    @Override
+    public List<InstallStatsBean> getInstallStatsByTimeRange(@Param("startTime") Timestamp startTime,
+                                                             @Param("endTime") Timestamp endTime) {
+        return installStatsMapper.selectInstallStatsByTimeRange(startTime, endTime);
     }
 
     @Override
