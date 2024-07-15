@@ -38,10 +38,10 @@
     </select>
 
     <insert id="insertInstallStats" parameterType="com.pwa.saas_server.data.bean.InstallStatsBean">
-        insert into tb_install_stats (user_inst_ip, user_agent, user_language, user_net_type,
-                                      custom_params)
-        values (#{userInstIp}, #{userAgent}, #{userLanguage}, #{userNetType},
-                #{customParams})
+        insert into tb_install_stats (user_inst_ip, user_agent, user_browser_type, user_browser_version, user_language,
+                                      user_net_type, is_inst_success, custom_params)
+        values (#{userInstIp}, #{userAgent}, #{userBrowserType}, #{userBrowserVersion}, #{userLanguage}, #{userNetType},
+                #{isInstSuccess}, #{customParams})
     </insert>
 
     <delete id="deleteInstallStatsById" parameterType="java.lang.Long">
@@ -54,8 +54,11 @@
         <id column="inst_id" property="instId" jdbcType="BIGINT"/>
         <result column="user_inst_ip" property="userInstIp" jdbcType="VARCHAR"/>
         <result column="user_agent" property="userAgent" jdbcType="VARCHAR"/>
+        <result column="user_browser_type" property="userBrowserType" jdbcType="VARCHAR"/>
+        <result column="user_browser_version" property="userBrowserVersion" jdbcType="VARCHAR"/>
         <result column="user_language" property="userLanguage" jdbcType="VARCHAR"/>
         <result column="user_net_type" property="userNetType" jdbcType="VARCHAR"/>
+        <result column="is_inst_success" property="isInstSuccess" jdbcType="VARCHAR"/>
         <result column="custom_params" property="customParams" jdbcType="VARCHAR"/>
         <result column="created_time" property="createdTime" jdbcType="TIMESTAMP"/>
 
