@@ -30,6 +30,24 @@ public class InstallStatsController {
         return Result.success(installStatsService.getAllInstallStats());
     }
 
+    @GetMapping("/getInstallStatsByIp")
+    public Result<List<InstallStatsBean>> getInstallStatsByIp(String userInstIp) {
+        return Result.success(installStatsService.getInstallStatsByIp(userInstIp));
+    }
+
+    @GetMapping("/getInstallStatsByUa")
+    public Result<List<InstallStatsBean>> getInstallStatsByUa(String userAgent) {
+        return Result.success(installStatsService.getInstallStatsByUa(userAgent));
+    }
+
+    @GetMapping("/getInstallStatsById")
+    public Result<InstallStatsBean> getInstallStatsById(Long instId) {
+        return Result.success(installStatsService.getInstallStatsById(instId));
+    }
+
+//    //TODO 晚点实现
+////    List<InstallStatsBean> getInstallStatsByCreateTime(String startTime, String endTime);
+
     @PostMapping("/stats")
     public Result<String> insertInstallStats(HttpServletRequest request, InstallStatsBean installStatsBean) {
         logger.info("insertInstallStats " + installStatsBean.toString());
