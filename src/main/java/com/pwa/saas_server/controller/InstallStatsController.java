@@ -56,14 +56,13 @@ public class InstallStatsController {
         installStatsBean.setUserInstIp(clientIp);
         if (StringUtils.isEmpty(installStatsBean.getUserAgent())
                 || StringUtils.isEmpty(installStatsBean.getUserLanguage())
-                || StringUtils.isEmpty(installStatsBean.getUserTimezone())
                 || StringUtils.isEmpty(installStatsBean.getUserNetType())
         ) {
             return Result.error(ResultCode.PARAM_ERROR);
         }
 
         installStatsService.insertInstallStats(installStatsBean);
-        return Result.success("insertInstallStats successful!");
+        return Result.success("successful!");
     }
 
     @PostMapping("/deleteInstallStatsById")
