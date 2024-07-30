@@ -16,7 +16,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins("*") // 域名指定，这里表示所有
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 允许的方法
                 .allowedHeaders("*") // 允许的请求头
-                .allowCredentials(true) // 是否允许发送凭证(如 Cookie）
+                .allowCredentials(false) // 是否允许发送凭证(如 Cookie）
                 .maxAge(3600); // 预检请求的缓存时间（以秒为单位）
     }
 }

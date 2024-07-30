@@ -15,6 +15,7 @@ import java.sql.Timestamp;
 public class InstallStatsBean {
 
     private Long instId; //安装表ID，主键
+    private String origin; //来源
     private String userInstIp; //用户安装IP
     private String userAgent; //用户ua
     private String userBrowserType; //用户浏览器类型，例如：chrome，safari，opera..
