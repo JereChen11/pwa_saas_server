@@ -9,10 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -20,6 +17,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -38,6 +36,21 @@ public class SingleFileUploadController {
 
     @Value("${file.upload-dir}")
     private String uploadDir;
+
+    @GetMapping("/getAllSingleFiles")
+    public Result<List<SingleFileUploadBean>> getAllSingleFiles() {
+        return Result.success(singleFileUploadService.getAllSingleFiles());
+    }
+
+    @GetMapping("/getSingleFilesByOrigin")
+    public Result<List<SingleFileUploadBean>> getSingleFilesByOrigin(@RequestParam("origin") String origin) {
+        return Result.success(singleFileUploadService.getSingleFilesByOrigin(origin));
+    }
+
+    @GetMapping("/getSingleFilesByFileId")
+    public Result<SingleFileUploadBean> getSingleFilesByFileId(@RequestParam("fileId") Long fileId) {
+        return Result.success(singleFileUploadService.getSingleFilesByFileId(fileId));
+    }
 
     @PostMapping("/upload")
     public Result<String> uploadFile(@RequestParam("origin") String origin, @RequestParam("file") MultipartFile file) {
