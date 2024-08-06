@@ -111,4 +111,71 @@ public class SingleFileUploadController {
             return Result.error("Failed to upload file: " + e.getMessage());
         }
     }
+
+    @PostMapping("/uploadMoreTest")
+    public Result<String> uploadFile(@RequestParam("origin") String origin,
+                                     @RequestParam("file1") MultipartFile file1,
+                                     @RequestParam("file2") MultipartFile file2) {
+        if (file1.isEmpty() || file1.isEmpty()) {
+            return Result.error(ResultCode.PARAM_ERROR);
+        }
+
+        if (file1.getContentType() == null || !Objects.requireNonNull(file1.getContentType()).startsWith("image")
+                || file2.getContentType() == null || !Objects.requireNonNull(file2.getContentType()).startsWith("image")) {
+            return Result.error(ResultCode.FILE_FORMAT_ERROR);
+        }
+
+        //限制文件大小为5M
+        final long fileLimitSize = 5 * 1024 * 1024;
+        if (file1.getSize() > fileLimitSize || file2.getSize() > fileLimitSize) {
+            return Result.error(ResultCode.FILE_OUT_MAX);
+        }
+
+        try {
+            Path path1 = getPathByFile(file1);
+            Path path2 = getPathByFile(file2);
+
+            if (path1 == null || path2 == null) {
+                return Result.error(ResultCode.PARAM_ERROR);
+            }
+
+            // 创建目标文件夹（如果不存在）
+            Files.createDirectories(path1.getParent());
+            // 保存图片1
+            Files.write(path1, file1.getBytes());
+            // 保存图片2
+            Files.write(path2, file2.getBytes());
+
+            /* 插入到数据库中
+            singleFileUploadService.insertSingleFile(new SingleFileUploadBean(
+                            origin, originFileName, finalFileName, path.toAbsolutePath().toString(), imageType
+                    )
+            );*/
+
+            return Result.success("uploaded " + path1 + " and " + path2 + " successfully!");
+        } catch (IOException e) {
+            return Result.error("Failed to upload file: " + e.getMessage());
+        }
+    }
+
+    private Path getPathByFile(MultipartFile file) {
+        // 获取文件名并构建文件路径
+        String originFileName = file.getOriginalFilename();
+        if (originFileName == null) {
+            return null;
+        }
+
+        String[] fileNameArray = originFileName.split("\\.");
+        String imageType = fileNameArray[fileNameArray.length - 1];
+        StringBuilder newPathSb = new StringBuilder().append(uploadDir)
+                .append(File.separator)
+                //这里不能直接用文件名来，而是用UUID来定义文件名字，然后这个UUID要存入数据库，方便后期搜索。
+                .append(FileTool.generateFileName())
+                .append(".")
+                .append(imageType);
+        logger.error("newPathString = " + newPathSb);
+        //todo 怎么避免重复上传呢？
+        //根据原始名称去数据库中搜一下，看是否存在
+        return Paths.get(newPathSb.toString());
+    }
 }
