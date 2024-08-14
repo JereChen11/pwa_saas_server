@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class AppStoreExhibitInfoBean {
+    private String companyName; //公司名称
     private String downloadCount; //APP下载数
     private int commentsNumber; //APP评论数
     private String introduction; //APP简介

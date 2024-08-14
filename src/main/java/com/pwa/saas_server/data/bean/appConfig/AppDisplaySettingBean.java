@@ -10,9 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class AppBasicConfigBean {
-    private int appId;
-    private String appName;
-    private String appNote;
-    private String appLogo;
+public class AppDisplaySettingBean {
+    private String themeColor; //主题颜色，例如：#E16868
+    private String backgroundColor; //背景颜色，例如：#38E122
 }

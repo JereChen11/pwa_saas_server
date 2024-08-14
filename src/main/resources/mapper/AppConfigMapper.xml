@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pwa.saas_server.mapper.AppConfigMapper">
+
+        <select id="selectAllAppBasicConfigList" resultMap="AppBasicConfigBeanResultMap">
+            select *
+            from tb_app_basic_config
+        </select>
+
+        <select id="selectAppBasicConfigByAppId" parameterType="java.lang.Integer" resultMap="AppBasicConfigBeanResultMap">
+            select *
+            from tb_app_basic_config
+            where app_id = #{app_id}
+        </select>
+
+        <select id="selectAppStoreInfoByAppId" parameterType="java.lang.Integer" resultMap="AppStoreInfoBeanResultMap">
+            select *
+            from tb_app_store_info
+            where app_id = #{app_id}
+        </select>
+
+        <select id="selectAppStoreCommentsByAppStoreId" parameterType="java.lang.Integer" resultMap="AppStoreCommentsBeanResultMap">
+            select *
+            from tb_app_store_comments
+            where app_store_id = #{appStoreId}
+        </select>
+
+    <!--    <select id="selectInstallStatsByTimeRange" resultMap="InstallStatsBeanResultMap">-->
+    <!--        select *-->
+    <!--        from tb_install_stats-->
+    <!--        where created_time BETWEEN #{startTime} and #{endTime}-->
+    <!--    </select>-->
+
+    <!--    <select id="selectInstallStatsById" parameterType="java.lang.Long" resultMap="InstallStatsBeanResultMap">-->
+    <!--        select *-->
+    <!--        from tb_install_stats-->
+    <!--        where inst_id = #{instId}-->
+    <!--    </select>-->
+
+    <!--    <insert id="insertInstallStats" parameterType="com.pwa.saas_server.data.bean.InstallStatsBean">-->
+    <!--        insert into tb_install_stats (origin, user_inst_ip, user_agent, user_browser_type, user_browser_version,-->
+    <!--                                      user_language, user_net_type, is_inst_success, custom_params)-->
+    <!--        values (#{origin}, #{userInstIp}, #{userAgent}, #{userBrowserType}, #{userBrowserVersion}, #{userLanguage},-->
+    <!--                #{userNetType}, #{isInstSuccess}, #{customParams})-->
+    <!--    </insert>-->
+
+    <!--    <delete id="deleteInstallStatsById" parameterType="java.lang.Long">-->
+    <!--        delete-->
+    <!--        from tb_install_stats-->
+    <!--        where inst_id = #{instId}-->
+    <!--    </delete>-->
+
+    <resultMap id="AppBasicConfigBeanResultMap" type="com.pwa.saas_server.data.bean.appConfig.AppBasicConfigBean">
+        <id column="app_id" property="appId" jdbcType="INTEGER"/>
+        <result column="app_name" property="appName" jdbcType="VARCHAR"/>
+        <result column="app_note" property="appNote" jdbcType="VARCHAR"/>
+        <result column="app_logo" property="appLogo" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="AppStoreInfoBeanResultMap" type="com.pwa.saas_server.data.bean.appConfig.AppStoreInfoBean">
+        <id column="app_store_id" property="appStoreId" jdbcType="INTEGER"/>
+        <result column="app_name" property="appName" jdbcType="VARCHAR"/>
+        <result column="app_logo" property="appLogo" jdbcType="VARCHAR"/>
+        <result column="company_name" property="companyName" jdbcType="VARCHAR"/>
+        <result column="download_count" property="downloadCount" jdbcType="INTEGER"/>
+        <result column="review_count" property="reviewCount" jdbcType="INTEGER"/>
+        <result column="app_description" property="appDescription" jdbcType="VARCHAR"/>
+        <result column="app_detail_images" property="appDetailImages" jdbcType="VARCHAR"/>
+        <result column="app_tags" property="appTags" jdbcType="VARCHAR"/>
+        <result column="rating_settings" property="ratingSettings" jdbcType="VARCHAR"/>
+        <result column="app_id" property="appId" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap id="AppStoreCommentsBeanResultMap" type="com.pwa.saas_server.data.bean.appConfig.AppStoreCommentsInfoBean">
+        <id column="comment_id" property="commentId" jdbcType="INTEGER"/>
+        <result column="commenter_avatar" property="commenterAvatar" jdbcType="VARCHAR"/>
+        <result column="commenter_name" property="commenterName" jdbcType="VARCHAR"/>
+        <result column="rating" property="rating" jdbcType="INTEGER"/>
+        <result column="comment_text" property="commentText" jdbcType="VARCHAR"/>
+        <result column="app_store_id" property="appStoreId" jdbcType="INTEGER"/>
+    </resultMap>
+
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
