@@ -26,5 +26,5 @@ public class AppStoreInfoBean {
     private String ratingSettings; //五个等级范围的评分数据，例如：10，0，0，0，1。
     private int appId;
 
-//    private List<AppStoreCommentsInfoBean> commentsInfoBeanList;
+    private List<AppStoreCommentsInfoBean> commentsInfoBeanList;
 }

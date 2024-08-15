@@ -46,4 +46,22 @@ public class AppConfigController {
         return Result.success(appConfigService.getAppStoreCommentsByAppStoreId(appStoreId));
     }
 
+    @GetMapping("/getAppConfigByAppId")
+    public Result<AppConfigBean> getAppConfigByAppId(@RequestParam("appId") int appId) {
+
+        AppBasicConfigBean appBasicConfigBean = appConfigService.getAppBasicConfigByAppId(appId);
+        List<AppStoreInfoBean> appStoreInfoBeanList = appConfigService.getAppStoreInfoByAppId(appId);
+        AppStoreInfoBean firstAppStoreInfoBean = appStoreInfoBeanList.get(0);
+        if (firstAppStoreInfoBean == null) {
+            return Result.error("appStoreInfoBeanList.get(0) == null");
+        }
+        List<AppStoreCommentsInfoBean> appStoreCommentsInfoBeanList =
+                appConfigService.getAppStoreCommentsByAppStoreId(firstAppStoreInfoBean.getAppStoreId());
+        firstAppStoreInfoBean.setCommentsInfoBeanList(appStoreCommentsInfoBeanList);
+        AppConfigBean appConfigBean = new AppConfigBean(appBasicConfigBean, "en", firstAppStoreInfoBean);
+
+        return Result.success(appConfigBean);
+    }
+
+
 }
