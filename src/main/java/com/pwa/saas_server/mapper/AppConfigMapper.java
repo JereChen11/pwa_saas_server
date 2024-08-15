@@ -17,8 +17,23 @@ public interface AppConfigMapper {
 
     AppBasicConfigBean selectAppBasicConfigByAppId(int appId);
 
+    List<AppStoreInfoBean> getAllAppStoreInfo();
+
     List<AppStoreInfoBean> selectAppStoreInfoByAppId(int appId);
+
+    List<AppStoreCommentsInfoBean> getAllAppStoreComments();
 
     List<AppStoreCommentsInfoBean> selectAppStoreCommentsByAppStoreId(int appStoreId);
 
+    void insertAppBasicConfig(AppBasicConfigBean appBasicConfigBean);
+
+    void updateAppBasicConfig(AppBasicConfigBean appBasicConfigBean);
+
+    void insertAppStoreInfo(AppStoreInfoBean appStoreInfoBean);
+
+    void updateAppStoreInfo(AppStoreInfoBean appStoreInfoBean);
+
+    void insertAppStoreCommentsInfo(AppStoreCommentsInfoBean appStoreCommentsInfoBean);
+
+    void updateAppStoreCommentsInfo(AppStoreCommentsInfoBean appStoreCommentsInfoBean);
 }

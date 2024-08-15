@@ -31,12 +31,52 @@ public class AppConfigServiceImpl implements AppConfigService {
     }
 
     @Override
+    public List<AppStoreInfoBean> getAllAppStoreInfo() {
+        return appConfigMapper.getAllAppStoreInfo();
+    }
+
+    @Override
     public List<AppStoreInfoBean> getAppStoreInfoByAppId(int appId) {
         return appConfigMapper.selectAppStoreInfoByAppId(appId);
     }
 
     @Override
+    public List<AppStoreCommentsInfoBean> getAllAppStoreComments() {
+        return appConfigMapper.getAllAppStoreComments();
+    }
+
+    @Override
     public List<AppStoreCommentsInfoBean> getAppStoreCommentsByAppStoreId(int appStoreId) {
         return appConfigMapper.selectAppStoreCommentsByAppStoreId(appStoreId);
+    }
+
+    @Override
+    public void insertAppBasicConfig(AppBasicConfigBean appBasicConfigBean) {
+        appConfigMapper.insertAppBasicConfig(appBasicConfigBean);
+    }
+
+    @Override
+    public void updateAppBasicConfig(AppBasicConfigBean appBasicConfigBean) {
+        appConfigMapper.updateAppBasicConfig(appBasicConfigBean);
+    }
+
+    @Override
+    public void insertAppStoreInfo(AppStoreInfoBean appStoreInfoBean) {
+        appConfigMapper.insertAppStoreInfo(appStoreInfoBean);
+    }
+
+    @Override
+    public void updateAppStoreInfo(AppStoreInfoBean appStoreInfoBean) {
+        appConfigMapper.updateAppStoreInfo(appStoreInfoBean);
+    }
+
+    @Override
+    public void insertAppStoreCommentsInfo(AppStoreCommentsInfoBean appStoreCommentsInfoBean) {
+        appConfigMapper.insertAppStoreCommentsInfo(appStoreCommentsInfoBean);
+    }
+
+    @Override
+    public void updateAppStoreCommentsInfo(AppStoreCommentsInfoBean appStoreCommentsInfoBean) {
+        appConfigMapper.updateAppStoreCommentsInfo(appStoreCommentsInfoBean);
     }
 }

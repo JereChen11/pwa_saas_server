@@ -2,51 +2,96 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.pwa.saas_server.mapper.AppConfigMapper">
 
-        <select id="selectAllAppBasicConfigList" resultMap="AppBasicConfigBeanResultMap">
-            select *
-            from tb_app_basic_config
-        </select>
+    <select id="selectAllAppBasicConfigList" resultMap="AppBasicConfigBeanResultMap">
+        select *
+        from tb_app_basic_config
+    </select>
 
-        <select id="selectAppBasicConfigByAppId" parameterType="java.lang.Integer" resultMap="AppBasicConfigBeanResultMap">
-            select *
-            from tb_app_basic_config
-            where app_id = #{app_id}
-        </select>
+    <select id="selectAppBasicConfigByAppId" parameterType="java.lang.Integer" resultMap="AppBasicConfigBeanResultMap">
+        select *
+        from tb_app_basic_config
+        where app_id = #{app_id}
+    </select>
 
-        <select id="selectAppStoreInfoByAppId" parameterType="java.lang.Integer" resultMap="AppStoreInfoBeanResultMap">
-            select *
-            from tb_app_store_info
-            where app_id = #{app_id}
-        </select>
+    <select id="getAllAppStoreInfo" resultMap="AppStoreInfoBeanResultMap">
+        select *
+        from tb_app_store_info
+    </select>
 
-        <select id="selectAppStoreCommentsByAppStoreId" parameterType="java.lang.Integer" resultMap="AppStoreCommentsBeanResultMap">
-            select *
-            from tb_app_store_comments
-            where app_store_id = #{appStoreId}
-        </select>
+    <select id="selectAppStoreInfoByAppId" parameterType="java.lang.Integer" resultMap="AppStoreInfoBeanResultMap">
+        select *
+        from tb_app_store_info
+        where app_id = #{app_id}
+    </select>
 
-    <!--    <select id="selectInstallStatsByTimeRange" resultMap="InstallStatsBeanResultMap">-->
-    <!--        select *-->
-    <!--        from tb_install_stats-->
-    <!--        where created_time BETWEEN #{startTime} and #{endTime}-->
-    <!--    </select>-->
+    <select id="getAllAppStoreComments" resultMap="AppStoreCommentsBeanResultMap">
+        select *
+        from tb_app_store_comments
+    </select>
 
-    <!--    <select id="selectInstallStatsById" parameterType="java.lang.Long" resultMap="InstallStatsBeanResultMap">-->
-    <!--        select *-->
-    <!--        from tb_install_stats-->
-    <!--        where inst_id = #{instId}-->
-    <!--    </select>-->
+    <select id="selectAppStoreCommentsByAppStoreId" parameterType="java.lang.Integer"
+            resultMap="AppStoreCommentsBeanResultMap">
+        select *
+        from tb_app_store_comments
+        where app_store_id = #{appStoreId}
+    </select>
 
-    <!--    <insert id="insertInstallStats" parameterType="com.pwa.saas_server.data.bean.InstallStatsBean">-->
-    <!--        insert into tb_install_stats (origin, user_inst_ip, user_agent, user_browser_type, user_browser_version,-->
-    <!--                                      user_language, user_net_type, is_inst_success, custom_params)-->
-    <!--        values (#{origin}, #{userInstIp}, #{userAgent}, #{userBrowserType}, #{userBrowserVersion}, #{userLanguage},-->
-    <!--                #{userNetType}, #{isInstSuccess}, #{customParams})-->
-    <!--    </insert>-->
+    <insert id="insertAppBasicConfig" parameterType="com.pwa.saas_server.data.bean.appConfig.AppBasicConfigBean">
+        insert into tb_app_basic_config (app_name, app_note, app_logo)
+        values (#{appName}, #{appNote}, #{appLogo})
+    </insert>
+
+    <update id="updateAppBasicConfig" parameterType="com.pwa.saas_server.data.bean.appConfig.AppBasicConfigBean">
+        update tb_app_basic_config
+        set app_name=#{appName},
+            app_note=#{appNote},
+            app_logo=#{appLogo}
+        where app_id = #{appId}
+    </update>
+
+    <insert id="insertAppStoreInfo" parameterType="com.pwa.saas_server.data.bean.appConfig.AppStoreInfoBean">
+        insert into tb_app_store_info (app_name, app_logo, company_name, download_count, review_count,
+                                       app_description, app_detail_images, app_tags, rating_settings, app_id)
+        values (#{appName}, #{appLogo}, #{companyName}, #{downloadCount}, #{reviewCount}, #{appDescription},
+                #{appDetailImages}, #{appTags}, #{ratingSettings}, #{appId})
+    </insert>
+
+    <update id="updateAppStoreInfo" parameterType="com.pwa.saas_server.data.bean.appConfig.AppStoreInfoBean">
+        update tb_app_store_info
+        set app_name=#{appName},
+            app_logo=#{appLogo},
+            company_name=#{companyName},
+            download_count=#{downloadCount},
+            review_count=#{reviewCount},
+            app_description=#{appDescription},
+            app_detail_images=#{appDetailImages},
+            app_tags=#{appTags},
+            rating_settings=#{ratingSettings},
+            app_id=#{appId}
+        where app_store_id = #{appStoreId}
+    </update>
+
+    <insert id="insertAppStoreCommentsInfo"
+            parameterType="com.pwa.saas_server.data.bean.appConfig.AppStoreCommentsInfoBean">
+        insert into tb_app_store_comments (commenter_avatar, commenter_name, rating, comment_text, app_store_id)
+        values (#{commenterAvatar}, #{commenterName}, #{rating}, #{commentText}, #{appStoreId})
+    </insert>
+
+    <update id="updateAppStoreCommentsInfo"
+            parameterType="com.pwa.saas_server.data.bean.appConfig.AppStoreCommentsInfoBean">
+        update tb_app_store_comments
+        set commenter_avatar=#{commenterAvatar},
+            commenter_name=#{commenterName},
+            rating=#{rating},
+            comment_text=#{commentText},
+            app_store_id=#{appStoreId}
+        where comment_id = #{commentId}
+    </update>
+
 
     <!--    <delete id="deleteInstallStatsById" parameterType="java.lang.Long">-->
     <!--        delete-->
-    <!--        from tb_install_stats-->
+    <!--        from tb_app_store_comments-->
     <!--        where inst_id = #{instId}-->
     <!--    </delete>-->
 
@@ -71,7 +116,8 @@
         <result column="app_id" property="appId" jdbcType="INTEGER"/>
     </resultMap>
 
-    <resultMap id="AppStoreCommentsBeanResultMap" type="com.pwa.saas_server.data.bean.appConfig.AppStoreCommentsInfoBean">
+    <resultMap id="AppStoreCommentsBeanResultMap"
+               type="com.pwa.saas_server.data.bean.appConfig.AppStoreCommentsInfoBean">
         <id column="comment_id" property="commentId" jdbcType="INTEGER"/>
         <result column="commenter_avatar" property="commenterAvatar" jdbcType="VARCHAR"/>
         <result column="commenter_name" property="commenterName" jdbcType="VARCHAR"/>
