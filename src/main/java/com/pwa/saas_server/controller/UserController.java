@@ -1,14 +1,21 @@
 package com.pwa.saas_server.controller;
 
+import cn.hutool.jwt.JWT;
 import com.pwa.saas_server.data.base.Result;
 import com.pwa.saas_server.data.base.ResultCode;
 import com.pwa.saas_server.data.bean.user.UserBean;
 import com.pwa.saas_server.service.UserService;
+import com.pwa.saas_server.utils.MyConstant;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -24,6 +31,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    AuthenticationManager authenticationManager;
+
     @PostMapping("/register")
     public Result<String> register(@RequestParam("username") String username,
                                    @RequestParam("password") String password,
@@ -34,23 +44,36 @@ public class UserController {
             return Result.error("Please enter a password with more than 6 digits");
         }
 
-        UserBean userBean = new UserBean(username, password, referer);
-        userService.insertUser(userBean);
-
-        return Result.success("register success.");
+        //将原始密码进行加密处理得到加密后的密码，并存到数据库。
+        String encPwd = new BCryptPasswordEncoder().encode(password);
+        logger.info("register, password = " + password + ", encPwd = " + encPwd);
+        UserBean userBean = new UserBean(username, encPwd, referer);
+        return userService.insertUser(userBean);
     }
 
 
-    @GetMapping("/login")
-    public Result<String> login(@RequestParam("username") String username, @RequestParam("password") String password) {
+    @PostMapping("/login")
+    public Result<String> login(@RequestParam("username") String username,
+                                @RequestParam("password") String password,
+                                HttpServletResponse response) {
         logger.info("login username = " + username + ", password = " + password);
         if (username.isBlank() || password.isBlank()) {
             return Result.error(ResultCode.PARAM_ERROR);
         }
+        /*
         UserBean userBean = userService.getUserByNameAndPwd(username, password);
         if (userBean == null) {
             return Result.error("登入失败");
         }
+        logger.info("login userBean = " + userBean);
+         */
+
+
+        //登入成功，则颁布认证token。
+        String token = authenticate(username, password);
+        logger.info("login authenticate get token = " + token);
+        //将token 是设置在 HTTP 头部中，并作为响应的一部分发送给客户端。注意这里的空格不能省略！
+        response.setHeader("Authorization", "Bearer " + token);
         return Result.success("登入成功");
     }
 
@@ -62,6 +85,23 @@ public class UserController {
 //        }
 //        return Result.success(resultMsg);
 //    }
+
+    private String authenticate(String username, String password) {
+        logger.info("authenticate username = " + username + ", password = " + password);
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(username, password);
+        logger.info("authenticate authenticationToken = " + authenticationToken);
+        //进行认证，如果认证失败会抛出异常。
+        authenticationManager.authenticate(authenticationToken);
+
+        //上一步没有抛出异常说明认证成功，我们向客户端颁发jwt令牌
+        String token = JWT.create()
+                .setPayload(MyConstant.JWT_PAYLOAD_KEY_USERNAME, username)
+                .setKey(MyConstant.JWT_SIGN_KEY.getBytes(StandardCharsets.UTF_8))
+                .sign();
+        logger.info("token = " + token);
+        return token;
+    }
 
     @GetMapping("/getAllUsers")
     public Result<List<UserBean>> getAllUsers() {

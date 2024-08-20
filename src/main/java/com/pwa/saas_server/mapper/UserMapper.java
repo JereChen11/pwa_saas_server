@@ -12,7 +12,12 @@ import java.util.List;
 public interface UserMapper {
     List<UserBean> selectAllUsers();
 
-    List<UserBean> selectUsersByUsername(String username);
+    /**
+     * 根据username进行查询
+     * @param username UNIQUE属性，所以username是唯一的，用户表中不存在两个相同的username
+     * @return UserBean
+     */
+    UserBean selectUsersByUsername(String username);
 
     UserBean selectUserById(int userId);
 

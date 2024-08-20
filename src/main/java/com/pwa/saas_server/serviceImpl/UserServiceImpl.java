@@ -1,5 +1,6 @@
 package com.pwa.saas_server.serviceImpl;
 
+import com.pwa.saas_server.data.base.Result;
 import com.pwa.saas_server.data.bean.user.UserBean;
 import com.pwa.saas_server.mapper.UserMapper;
 import com.pwa.saas_server.service.UserService;
@@ -23,7 +24,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserBean> getUsersByUsername(String username) {
+    public UserBean getUsersByUsername(String username) {
         return userMapper.selectUsersByUsername(username);
     }
 
@@ -38,8 +39,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void insertUser(UserBean userBean) {
-        userMapper.insertUser(userBean);
+    public Result<String> insertUser(UserBean userBean) {
+        try {
+            userMapper.insertUser(userBean);
+        } catch(org.springframework.dao.DuplicateKeyException e) {
+            System.out.println("UserServiceImple insertUser get the Exception!!!");
+            System.out.println(e.getClass().getName());
+            return Result.error("注册失败，该用户名已存在，请换一个新的用户名！");
+        }
+        return Result.success("register " + userBean.getUsername() + " successful!");
     }
 
     @Override
