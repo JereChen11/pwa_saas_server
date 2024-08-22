@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -94,10 +95,17 @@ public class UserController {
         //进行认证，如果认证失败会抛出异常。
         authenticationManager.authenticate(authenticationToken);
 
+        logger.info("authenticate current Date = " + new Date());
+        //设置Token失效时间为7天。
+        Date expireDate = new Date(System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000);
+        logger.info("authenticate expireDate = " + expireDate);
+
         //上一步没有抛出异常说明认证成功，我们向客户端颁发jwt令牌
         String token = JWT.create()
                 .setPayload(MyConstant.JWT_PAYLOAD_KEY_USERNAME, username)
                 .setKey(MyConstant.JWT_SIGN_KEY.getBytes(StandardCharsets.UTF_8))
+                .setIssuedAt(new Date())
+                .setExpiresAt(expireDate)
                 .sign();
         logger.info("token = " + token);
         return token;
