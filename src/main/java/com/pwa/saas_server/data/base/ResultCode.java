@@ -45,6 +45,10 @@ public class ResultCode implements Serializable {
      */
     public final static ResultCode PARAM_ERROR = dispose(ResultCodeEnum.PARAM_ERROR);
     /**
+     * token已过期，请重新登入
+     */
+    public final static ResultCode INVALID_TOKEN = dispose(ResultCodeEnum.INVALID_TOKEN);
+    /**
      * Json解析异常
      */
     public final static ResultCode JSON_FORMAT_ERROR = dispose(ResultCodeEnum.JSON_FORMAT_ERROR);

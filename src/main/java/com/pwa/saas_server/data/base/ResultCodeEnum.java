@@ -21,6 +21,11 @@ public enum ResultCodeEnum {
     PARAM_ERROR(400, "PARAM_ERROR"),
 
     /**
+     * token已过期，请重新登入
+     */
+    INVALID_TOKEN(403, "INVALID TOKEN，Please login again."),
+
+    /**
      * 未知的接口
      */
     UNKNOWN_INTERFACE(404, "UNKNOWN_INTERFACE"),

@@ -2,6 +2,7 @@ package com.pwa.saas_server.security;
 
 import com.google.gson.Gson;
 import com.pwa.saas_server.data.base.Result;
+import com.pwa.saas_server.data.base.ResultCode;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,10 +27,18 @@ public class MyUnauthorizedHandler implements AuthenticationEntryPoint {
                          AuthenticationException authException) throws IOException, ServletException {
         log.error("Unauthorized error", authException);
         System.out.println("authorized 异常捕获 --> " + authException.getMessage());
+
+        //自定义返回 Result<String>，方便客户端统一接口使用
+        Result<String> unauthorizedResult;
+        log.error("response.getStatus() = " + response.getStatus());
+
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
-        //自定义返回 Result<String>，方便客户端统一接口使用
-        Result<String> unauthorizedResult = Result.error("认证失败，请先登入！");
+        if (response.getStatus() == 403) {
+            unauthorizedResult = Result.error(ResultCode.INVALID_TOKEN);
+        } else {
+            unauthorizedResult = Result.error("认证失败，请先登入！");
+        }
         response.getWriter().write(new Gson().toJson(unauthorizedResult));
         response.getWriter().flush();
     }

@@ -69,9 +69,7 @@ public class WebSecurityConfig {
                                 //对登录注册允许匿名访问
                                 .requestMatchers(
                                         "/api/user/login",
-                                        "/api/user/register",
-                                        "/api/ranking/getAll",
-                                        "/api/web/ranking/getAll"
+                                        "/api/user/register"
                                 ).permitAll()
                                 //跨域请求会先进行一次options请求
                                 .requestMatchers(HttpMethod.OPTIONS).permitAll()
