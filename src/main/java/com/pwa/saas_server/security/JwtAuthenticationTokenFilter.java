@@ -47,12 +47,15 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         String authToken = authHeader.split(" ")[1];
         log.info("authToken:{}", authToken);
         JWT jwt = JWT.of(authToken);
+        //注意！这里提取出来的时间为秒，而System.currentTimeMillis()获取的本地时间的单位为毫秒。
         Object exp = jwt.getPayload("exp");
         logger.error("current time = " + System.currentTimeMillis());
+        logger.error("exp time = " + exp.toString());
         //默认Token永不过期
         boolean isExpired = false;
         if (exp != null) {
-            isExpired = System.currentTimeMillis() > Long.parseLong(exp.toString()); //true表示token过期了
+            //true表示token过期了
+            isExpired = System.currentTimeMillis() > Long.parseLong(exp + "000");
         }
         if (isExpired) {
             logger.error("过期啦。。。。。。。");
