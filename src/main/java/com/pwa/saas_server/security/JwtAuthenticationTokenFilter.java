@@ -1,8 +1,9 @@
 package com.pwa.saas_server.security;
 
 
-import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.JWTUtil;
+import com.pwa.saas_server.service.TokenBlackListService;
+import com.pwa.saas_server.utils.JwtTokenUtil;
 import com.pwa.saas_server.utils.MyConstant;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -33,6 +34,12 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    private TokenBlackListService tokenBlackListService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, AuthenticationException {
         // get token from header:  Authorization: Bearer <token>
@@ -46,25 +53,20 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         //取出Token
         String authToken = authHeader.split(" ")[1];
         log.info("authToken:{}", authToken);
-        JWT jwt = JWT.of(authToken);
-        //注意！这里提取出来的时间为秒，而System.currentTimeMillis()获取的本地时间的单位为毫秒。
-        Object exp = jwt.getPayload("exp");
-        logger.error("current time = " + System.currentTimeMillis());
-        logger.error("exp time = " + exp.toString());
         //默认Token永不过期
         boolean isExpired = false;
-        if (exp != null) {
-            //true表示token过期了
-            isExpired = System.currentTimeMillis() > Long.parseLong(exp + "000");
-        }
-        if (isExpired) {
-            logger.error("过期啦。。。。。。。");
+        long expirationTimeInSeconds = jwtTokenUtil.getExpTimeFromToken(authToken);
+        if (expirationTimeInSeconds <= 0) {
+            isExpired = true;
         }
 
+        //如果Token已存在于token黑名单中的话，说明用户已经登出了。
+        boolean isClientLogout = tokenBlackListService.isTokenBlacklisted(authToken);
+        logger.error("doFilterInternal isExpired = " + isExpired + ", isClientLogout = " + isClientLogout);
         //验证token
-        if (!JWTUtil.verify(authToken, MyConstant.JWT_SIGN_KEY.getBytes(StandardCharsets.UTF_8)) || isExpired) {
+        if (!JWTUtil.verify(authToken, MyConstant.JWT_SIGN_KEY.getBytes(StandardCharsets.UTF_8)) || isExpired || isClientLogout) {
             log.info("invalid token");
-            if (isExpired) {
+            if (isExpired || isClientLogout) {
                 //token已经过期，需要重新登入。
                 response.setStatus(403);
             }

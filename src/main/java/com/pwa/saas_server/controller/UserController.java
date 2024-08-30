@@ -4,6 +4,7 @@ import cn.hutool.jwt.JWT;
 import com.pwa.saas_server.data.base.Result;
 import com.pwa.saas_server.data.base.ResultCode;
 import com.pwa.saas_server.data.bean.user.UserBean;
+import com.pwa.saas_server.service.TokenBlackListService;
 import com.pwa.saas_server.service.UserService;
 import com.pwa.saas_server.utils.MyConstant;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,6 +32,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private TokenBlackListService tokenBlackListService;
 
     @Autowired
     AuthenticationManager authenticationManager;
@@ -78,14 +82,15 @@ public class UserController {
         return Result.success("登入成功");
     }
 
-//    @PostMapping("/logout")
-//    public Result<String> logout(@TokenToUser UserBean userBean) {
-//        String resultMsg = "logout success.";
-//        if (!userService.logout(userBean.getUserId())) {
-//            resultMsg = "logout failed.";
-//        }
-//        return Result.success(resultMsg);
-//    }
+    @PostMapping("/logout")
+    public Result<String> logout(@RequestHeader("Authorization") String token) {
+        // 从 Authorization header 中提取 token
+        String jwtToken = token.replace("Bearer ", "");
+        // 将 token 添加到黑名单
+        tokenBlackListService.addTokenToBlacklist(jwtToken);
+
+        return Result.success("logout success.");
+    }
 
     private String authenticate(String username, String password) {
         logger.info("authenticate username = " + username + ", password = " + password);
